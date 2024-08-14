@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import OpenAI from "openai"; // Import OpenAI library for interacting with the OpenAI API
+import { Ratelimit } from "@upstash/ratelimit";
+import { kv } from "@vercel/kv";
+import OpenAI from "openai";
 
 // System prompt for the AI, providing guidelines on how to respond to users
 const systemPrompt = `
@@ -23,9 +25,29 @@ const systemPrompt = `
   Remember to keep your responses concise and focused on helping the user as effectively as possible. Begin by asking, 'How can I help you today?' and follow these guidelines to provide the best possible support.
 `;
 
+const ratelimit = new Ratelimit({ redis: kv, limiter: Ratelimit.slidingWindow(5, "10s") });
+
+export const config = {
+  runtime: "edge",
+};
 
 // POST function to handle incoming requests
 export async function POST(req) {
+  const ip = req.ip ?? "127.0.0.1";
+
+  const { limit, reset, remaining} = await ratelimit.limit(ip);
+
+  if (remaining === 0) {
+    return new NextResponse(JSON.stringify({error: "Rate limit exceeded"}), {
+      status: '429',
+      headers: {
+        'X-RateLimit-Limit': limit.toString(),
+        'X-RateLimit-Remaining': remaining.toString(),
+        'X-RateLimit-Reset': reset.toString()
+      }
+    })
+  }
+
   const openai = new OpenAI(); // Create a new instance of the OpenAI client
   const data = await req.json(); // Parse the JSON body of the incoming request
 

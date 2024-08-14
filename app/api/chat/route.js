@@ -27,9 +27,7 @@ const systemPrompt = `
 
 const ratelimit = new Ratelimit({ redis: kv, limiter: Ratelimit.slidingWindow(5, "10s") });
 
-export const config = {
-  runtime: "edge",
-};
+export const runtime = "edge";
 
 // POST function to handle incoming requests
 export async function POST(req) {

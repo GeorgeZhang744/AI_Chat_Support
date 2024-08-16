@@ -15,7 +15,7 @@ This is an AI-powered customer support chatbot built using React, Next.js, and O
 
 You can access the live version of the Inventory Management App at the following link:
 
-[AI Chat Support Assistant App - Live](ai-chat-support-peach.vercel.app)
+[AI Chat Support Assistant App - Live](https://ai-chat-support-peach.vercel.app/)
 
 ## Usage
 

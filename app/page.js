@@ -72,7 +72,7 @@ export default function Home() {
   }, [messages]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between sm:p-12 p-4">
+    <main className="flex min-h-screen flex-col items-center justify-between sm:p-12 p-4 text-black">
       <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-4 flex flex-col">
         {/* Chat window with fixed height and scrollable overflow */}
         <div className="mb-4 space-y-2 p-2 border-b overflow-y-auto" style={{ height: "70vh", width: "100%" }}>
